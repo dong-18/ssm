@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zx.dao.UserDao1">
+
+	<select id="getUserByNameAndPass" resultType="user">
+		select * from ec_user where login_name = #{0} and password =#{1}
+	</select>
+	
+	<update id="activeUser1">update ec_user set disabled = #{0} where id = #{1}</update>
+<update id="activeUser" parameterType="String">
+update ec_user set disabled = '1' where active = #{active}</update>
+	<insert id="saveUser" parameterType="user">
+	insert into ec_user(login_name,password,name,sex,email,phone,address,create_date,active,role) values(#{loginName},#{password},#{name},#{sex},#{email},#{phone},#{address},#{createDate},#{active},#{role})
+	</insert>
+	
+	<select id="getUserByName" parameterType="String" resultType="boolean">
+		select * from ec_user where login_name  = #{a}
+	</select>
+<select id="getAllManageUser" resultType="user"> select * from ec_user where role = 2</select>
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zx.dao.ArticleTypeDao1">
+
+	<select id="getAllFType" resultType="ArticleType">
+		select * from ec_article_type where length(code) = 4
+	</select>
+	<select id="findMaxFcode" resultType="String">
+		select max(code) from ec_article_type where length(code) = 4
+	</select>
+	<select id="findMaxScode" parameterType="string" resultType="String">
+		select max(code) from ec_article_type where code like '${va}%' and length(code) = 8
+	</select>
+	<select id="getArticleType" parameterType="string" resultType="ArticleType">
+		select *  from ec_article_type where code = #{a}
+	</select>
+	
+	<select id="getTotalNum" resultType="int">select count(*) from ec_article_type where  delFlag = '0'</select>
+	<select id="getAllTypes" resultType="ArticleType">select * from ec_article_type where delFlag = '0'  limit #{0},#{1}</select>
+	<select id="getSecondTypesByFCode" parameterType="string" resultType="ArticleType">
+		select * from ec_article_type where code like #{p} and length(code) = 8
+	</select>
+	<update id="updateType">update ec_article_type set name = #{0},remark = #{1} where code = #{2}</update>
+	<insert id="saveType" parameterType="ArticleType">insert into ec_article_type(code,name,remark) values(#{code},#{name},#{remark})</insert>
+	<update id="updateType1" >update ec_article set type_code = #{0} where type_code = #{1}</update>
+	<delete id="deleteType1">delete from ec_article_type where code = #{0}</delete>
+     <select id="findArticleByCode" parameterType="string" resultType="int">select count(1) from ec_article where  type_code = #{y} and disabled = '0'</select>
+<update id="deleteType">update  ec_article_type  set delFlag = '1' where code = #{k}</update>
+</mapper>

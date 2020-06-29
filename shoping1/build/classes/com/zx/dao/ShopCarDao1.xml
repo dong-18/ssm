@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zx.dao.ShopCarDao1">
+
+	<select id="getShopCarByUserIdAndArticeId"  resultType="Shopcar">
+		select * from ec_shopcar where user_id = #{uid} and article_id = #{aid}
+	</select>
+	<update id="updateShopCar"  >
+		update ec_shopcar set buynum = #{0} where user_id = #{1} and article_id = #{2}
+	</update>
+    <insert id="addShopCar">
+    insert into ec_shopcar(buynum,user_id,article_id)  values(#{A},#{b},#{c})
+    </insert>
+<select id="findAllShopCarByUserId" parameterType="int" resultMap="shopcar">
+SELECT * FROM ec_shopcar s,ec_article a WHERE  s.article_id = a.id  AND s.user_id = #{id}
+</select>
+<resultMap type="Shopcar" id="shopcar">
+		<!-- id标签用于绑定主键 -->
+		<id property="userId" column="user_id"/>
+		<id property="articleId" column="article_id"/>
+		<!-- 使用result绑定普通字段 -->
+		<result property="buynum" column="buynum"/>
+		<association property="article" javaType="article">
+			<id property="id" column="id"/>
+			<result property="title" column="title"/>
+			<result property="supplier" column="supplier"/>
+			<result property="price" column="price"/>
+			<result property="discount" column="discount"/>
+			<result property="locality" column="locality"/>
+			<result property="putawayDate" column="putaway_data"/>
+			<result property="storage" column="storage"/>
+			<result property="image" column="image"/>
+			<result property="description" column="description"/>
+		</association>
+	</resultMap>
+	
+	<delete id="deleteShopCar">delete FROM ec_shopcar where user_id = #{0} and article_id = #{1}</delete>
+	
+</mapper>

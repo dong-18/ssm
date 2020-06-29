@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zx.dao.OrderDao1">
+
+	<insert id="saveOrder"  useGeneratedKeys="true" keyProperty="id" parameterType="order"  >
+	insert into ec_order(order_code,create_date,amount,user_id) values(#{orderCode},#{createDate,jdbcType=DATE},#{amount},#{userId})
+	</insert>
+
+ <insert id="saveItem" parameterType="OrderItem">
+ insert into ec_order_item(article_id,order_id,order_num) values(#{articleId},#{orderId},#{orderNum})
+ </insert>
+	
+	<select id="getOrdersByUserId"  resultMap="a">
+		SELECT * FROM ec_order WHERE user_id = #{a}
+	</select>
+	<resultMap type="order" id="a">
+	<!-- id标签用于绑定主键 -->
+		<id property="id" column="id"/>
+		<!-- 使用result绑定普通字段 -->
+		<result property="orderCode" column="order_code"/>
+		<result property="createDate" column="create_date"/>
+	</resultMap>
+	<select id="getItemsByorderId" parameterType="int" resultMap="order_user_map">
+	SELECT * FROM ec_order_item i,ec_article e WHERE order_id = #{q} AND e.id = i.article_id
+	</select>
+	<resultMap type="OrderItem" id="order_user_map">
+		<!-- id标签用于绑定主键 -->
+		<id property="orderId" column="order_id"/>
+		<!-- 使用result绑定普通字段 -->
+		<result property="articleId" column="article_id"/>
+		<result property="orderNum" column="order_num"/>
+		<association property="article" javaType="article">
+			<id property="id" column="id"/>
+			<result property="title" column="title"/>
+			<result property="supplier" column="supplier"/>
+			<result property="price" column="price"/>
+			<result property="discount" column="discount"/>
+			<result property="locality" column="locality"/>
+			<result property="putawayDate" column="putaway_data"/>
+			<result property="storage" column="storage"/>
+			<result property="image" column="image"/>
+			<result property="description" column="description"/>
+		</association>
+	</resultMap>
+<select id="getTotalNum" resultType="int">select count(*) from ec_order WHERE paystatus LIKE
+<if test="a==''.toString() or a==null">
+		'%%'
+</if>
+<if test="a!=''.toString() and a!=null">
+		'%${a}%'
+</if>
+ AND order_code LIKE <if test="b==''.toString() or b==null">
+		'%%'
+</if>
+<if test="b!=''.toString() and b!=null">
+		'%${b}%'
+</if></select>
+<select id="findAllOrder" resultMap="a" >SELECT * FROM ec_order WHERE paystatus LIKE 
+ <if test="a==''.toString() or a==null">
+		'%%'
+</if>
+<if test="a!=''.toString() and a!=null">
+		'%${a}%'
+</if>AND order_code LIKE 
+<if test="b==''.toString() or b==null">
+		'%%'
+</if>
+<if test="b!=''.toString() and b!=null">
+		'%${b}%'
+</if>  limit #{startSize},#{pageSize}</select>
+<update id="checkOrder">update ec_order set send_date = 
+ <if test="b=='0'.toString() ">
+		null
+</if>
+<if test="b!='0'.toString() ">
+		#{c}
+</if>, status = ${b} where id = ${a}</update>
+</mapper>
